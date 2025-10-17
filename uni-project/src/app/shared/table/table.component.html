@@ -1,0 +1,66 @@
+<nz-table
+  [nzData]="listData"
+  [nzFrontPagination]="true"
+  [(nzPageSize)]="pageSize"
+  [(nzPageIndex)]="pageIndex"
+  [nzLoading]="loading"
+  [nzTotal]="total"
+  [nzShowSizeChanger]="true"
+  (nzQueryParams)="onQueryParamsChange($event)"
+>
+  <thead>
+    <tr>
+      @for (col of columns; track col) {
+      <th
+        [nzColumnKey]="col.key"
+        [nzSortFn]="col.sort ? true : null"
+        *ngIf="col.filter; instanceof: Array; else: noFilter"
+        [nzFilters]="col.filter"
+        [nzFilterFn]="true"
+      >
+        {{ col.title }}
+      </th>
+
+      <ng-template #noFilter>
+        <th [nzColumnKey]="col.key" [nzSortFn]="col.sort ? true : null">
+          {{ col.title }}
+        </th>
+      </ng-template>
+
+      }
+      <!-- Edit & Delete -->
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (data of listData; track data) {
+    <tr>
+      @for (col of columns; track col) {
+      <td>
+        {{ resolveData(data, col.key, col.pipe) }}
+      </td>
+      }
+      <td class="flex gap-2">
+        <!-- Edit btn -->
+        <button
+          (click)="onEdit(data)"
+          nz-button
+          nzType="default"
+          nzShape="circle"
+        >
+          <i nz-icon nzType="edit"></i>
+        </button>
+        <!-- Delete btn -->
+        <button
+          (click)="onDelete(data)"
+          nz-button
+          nzType="default"
+          nzShape="circle"
+        >
+          <i nz-icon nzType="delete"></i>
+        </button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</nz-table>

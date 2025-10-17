@@ -1,0 +1,333 @@
+<nz-layout class="app-layout">
+  <!-- Descktop Sidebar -->
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    nzWidth="257px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+    [nzTheme]="themeService.isDarkMode() ? 'dark' : 'light'"
+    [nzCollapsedWidth]="isMobile ? 0 : 80"
+  >
+    <div
+      class="sidebar-logo"
+      [ngStyle]="{
+        'background-color': themeService.isDarkMode() ? '#001529' : '#ffffff'
+      }"
+    >
+      <img
+        src="/assets/logo (3).png"
+        alt="logo"
+        style="width: 50px; height: auto"
+        class="-ml-3"
+      />
+      <h1 [ngStyle]="{ color: themeService.isDarkMode() ? '#ffffff' : '#000' }">
+        Portal
+      </h1>
+    </div>
+    <ul
+      nz-menu
+      [nzTheme]="themeService.isDarkMode() ? 'dark' : 'light'"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <!-- Dashboard -->
+      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="appstore">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/dashboard" routerLinkActive="ant-menu-item-selected"
+              >Overview</a
+            >
+          </li>
+        </ul>
+      </li>
+
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/deposit" routerLinkActive="ant-menu-item-selected">
+          <span nz-icon nzType="dollar" nzTheme="outline"></span>
+          <span>Deposit</span>
+        </a>
+      </li>
+
+      <!-- Food Reserve -->
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/food-reserve" routerLinkActive="ant-menu-item-selected">
+          <span nz-icon nzType="rest" nzTheme="outline"></span>
+          <span>Food Reserve</span>
+        </a>
+      </li>
+
+      <!-- Courses -->
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/courses" routerLinkActive="ant-menu-item-selected">
+          <span nz-icon nzType="read" nzTheme="outline"></span>
+          <span>Courses</span>
+        </a>
+      </li>
+
+      <!-- Settings -->
+      <li nz-submenu nzTitle="Settings" nzIcon="setting">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a
+              routerLink="/settings/general"
+              routerLinkActive="ant-menu-item-selected"
+              >General</a
+            >
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a
+              routerLink="/settings/security"
+              routerLinkActive="ant-menu-item-selected"
+              >Security</a
+            >
+          </li>
+        </ul>
+      </li>
+
+      <!-- Profile -->
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/profile" routerLinkActive="ant-menu-item-selected">
+          <span nz-icon nzType="user" nzTheme="outline"></span>
+          <span>Profile</span>
+        </a>
+      </li>
+    </ul>
+  </nz-sider>
+
+  <!-- Mobile Section-->
+  <div
+    class="mobile-sidebar-backdrop w-[80%]"
+    [class.visible]="showMobileSidebar"
+  >
+    <div class="" [class.visible]="showMobileSidebar">
+      <div class="mobile-sidebar-header mx-8 py-4">
+        <div class="flex justify-between items-center">
+          <a class="flex justify-center items-center gap-4">
+            <img src="/assets/logo.svg" alt="logo" class="w-16" />
+            <h1 class="text-white">PayeMate</h1>
+          </a>
+          <button
+            nz-button
+            nzType="text"
+            class="close-btn text-white hover:text-white"
+            (click)="closeMobileSidebar()"
+          >
+            <nz-icon nzType="close" nzTheme="outline"></nz-icon>
+          </button>
+        </div>
+      </div>
+      <ul nz-menu nzTheme="dark" nzMode="inline">
+        <!-- Dashboard -->
+        <li nz-submenu nzTitle="Dashboard" nzIcon="appstore">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/dashboard">Overview</a>
+            </li>
+            <!-- <li nz-menu-item nzMatchRouter>
+              <a [routerLink]="'Analytics'">Analytics</a>
+            </li> -->
+          </ul>
+        </li>
+
+        <!-- Tasks -->
+        <li nz-menu-item nzMatchRouter>
+          <a [routerLink]="'new-transaction'">
+            <span nz-icon nzType="plus" nzTheme="outline"></span>
+            <span>New Trans</span>
+          </a>
+        </li>
+
+        <!-- Purchases -->
+        <li nz-menu-item nzMatchRouter>
+          <a [routerLink]="'purchases'">
+            <span nz-icon nzType="credit-card" nzTheme="outline"></span>
+            <span>Purchases</span>
+          </a>
+        </li>
+        <!-- Split Bills -->
+        <li nz-menu-item nzMatchRouter>
+          <a [routerLink]="'splitwise'">
+            <span nz-icon nzType="percentage" nzTheme="outline"></span>
+            <span>Split Bills</span>
+          </a>
+        </li>
+        <li nz-submenu nzTitle="Settings" nzIcon="setting">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/settings/general">General</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/settings/security">Security</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <nz-layout class="dark:bg-gray-950">
+    <nz-header class="app-header">
+      <div class="w-full flex justify-between pe-8">
+        <div
+          class="header-content"
+          [ngClass]="{ dark: themeService.isDarkMode() }"
+        >
+          <span class="header-trigger" (click)="toggleCollapsed()">
+            <nz-icon
+              class="trigger"
+              [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            ></nz-icon>
+          </span>
+          <!-- <app-theme-toggle></app-theme-toggle> -->
+        </div>
+        <!-- <div class="flex items-center gap-2">
+          <div nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click">
+            <nz-avatar
+              [nzSrc]="userProfileImage"
+              nzSize="large"
+              class="cursor-pointer"
+            ></nz-avatar>
+          </div>
+          <nz-dropdown-menu #userMenu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item disabled class="user-info">
+                <nz-icon nzType="user" class="me-2"></nz-icon>
+                <span
+                  class="username"
+                  [ngStyle]="{
+                    color: themeService.isDarkMode() ? '#ffffff' : '#000'
+                  }"
+                >
+                  {{ userName || "User" }}
+                </span>
+              </li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item (click)="goToProfile()">
+                <nz-icon nzType="profile" nzTheme="outline" class="me-2" />
+                My Profile
+              </li>
+              <li nz-menu-item (click)="goToSettings()">
+                <nz-icon nzType="setting" class="me-2"></nz-icon>
+                Settings
+              </li>
+              <li nz-menu-item (click)="logout()">
+                <nz-icon nzType="logout" class="me-2"></nz-icon>
+                Logout
+              </li>
+            </ul>
+            <ul nz-menu>
+                     <li nz-menu-item class="user-info" disabled>
+                <div class="flex flex-col items-center gap-3 p-2 w-32">
+                  <nz-avatar [nzSrc]="userProfileImage" nzSize="large"></nz-avatar>
+                  <span class="username text-lg font-medium" [ngStyle]="{ color: themeService.isDarkMode() ? '#ffffff' : '#000' }">
+                    {{ userName || 'User' }}
+                  </span>
+                </div>
+              </li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item (click)="goToSettings()">
+                <nz-icon nzType="setting" class="me-2"></nz-icon>
+                Settings
+              </li>
+              <li nz-menu-item (click)="logout()">
+                <nz-icon nzType="logout" class="me-2"></nz-icon>
+                Logout
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </div> -->
+        <div class="flex items-center gap-2">
+          <div class="font-bold">{{ amount | number : "1.2-2" }} $</div>
+          <div
+            nz-dropdown
+            [nzDropdownMenu]="userMenu"
+            nzTrigger="hover"
+            class="hover-trigger"
+          >
+            <nz-avatar
+              [nzSrc]="userProfileImage"
+              nzSize="large"
+              class="cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all duration-200"
+            ></nz-avatar>
+          </div>
+          <nz-dropdown-menu #userMenu="nzDropdownMenu">
+            <ul
+              nz-menu
+              class="min-w-[200px] bg-white dark:bg-gray-800 rounded-lg shadow-lg"
+            >
+              <li nz-menu-item disabled class="user-info px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <nz-icon
+                    nzType="user"
+                    class="text-gray-600 dark:text-gray-300"
+                  ></nz-icon>
+                  <span
+                    class="username font-medium"
+                    [ngStyle]="{
+                      color: themeService.isDarkMode() ? '#ffffff' : '#000000'
+                    }"
+                  >
+                    {{ userName || "User" }}
+                  </span>
+                </div>
+              </li>
+              <li
+                nz-menu-divider
+                class="border-gray-200 dark:border-gray-700"
+              ></li>
+              <li
+                nz-menu-item
+                (click)="goToProfile()"
+                class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              >
+                <div class="flex items-center gap-2">
+                  <nz-icon
+                    nzType="profile"
+                    nzTheme="outline"
+                    class="text-gray-600 dark:text-gray-300"
+                  ></nz-icon>
+                  <span>My Profile</span>
+                </div>
+              </li>
+              <li
+                nz-menu-item
+                (click)="goToSettings()"
+                class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              >
+                <div class="flex items-center gap-2">
+                  <nz-icon
+                    nzType="setting"
+                    class="text-gray-600 dark:text-gray-300"
+                  ></nz-icon>
+                  <span>Settings</span>
+                </div>
+              </li>
+              <li
+                nz-menu-item
+                (click)="logout()"
+                class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              >
+                <div class="flex items-center gap-2">
+                  <nz-icon
+                    nzType="logout"
+                    class="text-gray-600 dark:text-gray-300"
+                  ></nz-icon>
+                  <span>Logout</span>
+                </div>
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </div>
+    </nz-header>
+
+    <nz-content>
+      <div class="inner-content overflow-y-auto">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

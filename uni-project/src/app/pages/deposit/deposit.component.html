@@ -1,0 +1,37 @@
+<div class="flex items-center justify-center h-full w-full p-6">
+  <div
+    class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-blue-100"
+  >
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Deposit Funds</h2>
+      <p class="text-gray-500 text-sm">
+        Add credit to your student account to reserve meals
+      </p>
+    </div>
+
+    <!-- Number Input -->
+    <app-number-input
+      [(value)]="amount"
+      lable="Amount"
+    ></app-number-input>
+
+    <!-- Button -->
+     <div class="mt-6">
+        <app-button
+      [label]="isLoading ? 'Processing...' : 'Deposit Now'"
+      icon="dollar"
+      [isLoading]="isLoading"
+      [disabled]="isLoading"
+      (clicked)="deposit()"
+    >
+    </app-button> 
+     </div>
+   
+
+    <!-- Info -->
+    <p class="text-xs text-gray-400 text-center mt-4">
+      💡 Deposits are used only for campus meal reservations
+    </p>
+  </div>
+</div>

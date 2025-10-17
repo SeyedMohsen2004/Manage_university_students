@@ -1,0 +1,36 @@
+<div class="bg-white dark:bg-gray-800 custom-shadow p-6 rounded-lg">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+          {{ title }}
+        </p>
+  
+        <!-- CountUp or Static -->
+        <h3
+          class="text-2xl font-bold text-gray-900 dark:text-white mt-1"
+          *ngIf="useCountUp; else staticValue"
+          [appCountUp]="mainValue"
+          [duration]="duration"
+          [currencySymbol]="currencySymbol"
+        ></h3>
+        <ng-template #staticValue>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+            {{ currencySymbol }}{{ mainValue }}
+          </h3>
+        </ng-template>
+      </div>
+  
+      <!-- Ant Design Icon -->
+      <div
+        class="p-3 rounded-lg"
+        [ngClass]="[iconBgColor || 'bg-yellow-100 dark:bg-yellow-900/30', iconTextColor || 'text-yellow-600 dark:text-yellow-400']"
+      >
+        <nz-icon [nzType]="iconType" [nzTheme]="iconTheme || 'outline'" class="text-xl"></nz-icon>
+      </div>
+    </div>
+  
+    <p class="text-sm text-green-600 dark:text-green-400 mt-2">
+      {{ subText }}
+    </p>
+  </div>
+  

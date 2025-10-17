@@ -1,0 +1,17 @@
+.tab-content-scrollable {
+    max-height: 405px;
+    overflow-y: auto;
+  
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  
+    scrollbar-width: none;  
+    -ms-overflow-style: none;
+  
+    @screen 2xl {
+      // max-height: 100%;
+      overflow-y: auto;
+    }
+  }
+  

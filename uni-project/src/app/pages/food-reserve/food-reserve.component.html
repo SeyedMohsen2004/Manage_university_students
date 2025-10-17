@@ -1,0 +1,119 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
+        🍽️ Food Reservation
+      </h1>
+      <p class="text-gray-600 max-w-2xl mx-auto">
+        Discover delicious meals and reserve your spot for an exceptional dining experience
+      </p>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center items-center py-20">
+      <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+    </div>
+
+    <div *ngIf="errorMessage && !isLoading" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div 
+        *ngFor="let food of foods"
+        class="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+        [class.ring-2]="food.isReserved"
+        [class.ring-green-500]="food.isReserved">
+        
+        <div class="absolute top-4 right-4 z-10">
+          <span 
+            *ngIf="food.isReserved"
+            class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            Reserved
+          </span>
+          <span 
+            *ngIf="!food.isReserved && food.capacity < 5"
+            class="bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+            Almost Full
+          </span>
+        </div>
+
+        <div class="h-48 overflow-hidden relative">
+          <div 
+            class="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center text-7xl"
+            *ngIf="!food.imgoffood">
+            {{ getFoodEmoji(food.category) }}
+          </div>
+          <img 
+            *ngIf="food.imgoffood"
+            [src]="food.imgoffood" 
+            [alt]="food.name"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+          
+          <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+        </div>
+
+        <div class="p-5">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-xl font-bold text-gray-900 truncate pr-2">{{ food.name }}</h3>
+            <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">
+              {{ food.price | currency }}
+            </span>
+          </div>
+
+          <p class="text-sm text-gray-500 mb-4 italic flex items-center">
+            <svg class="w-4 h-4 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+              <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+            </svg>
+            {{ food.category }}
+          </p>
+
+          <div class="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-blue-500 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
+              </svg>
+              <span class="text-gray-700 font-medium text-sm">
+                {{ food.capacity }} Seats Available
+              </span>
+            </div>
+
+            <div class="flex">
+              <button
+                *ngIf="!food.isReserved"
+                (click)="reserveFood(food.id)"
+                class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                [disabled]="food.capacity === 0">
+                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                {{ food.capacity === 0 ? 'Full' : 'Reserve' }}
+              </button>
+
+              <button
+                *ngIf="food.isReserved"
+                (click)="cancelReservation(food.id)"
+                class="bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="foods.length === 0 && !isLoading" class="text-center py-16">
+      <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM8.94 6.94a1.5 1.5 0 11-2.83 0 1.5 1.5 0 012.83 0zm4.12 5.88a1.5 1.5 0 110-2.83 1.5 1.5 0 010 2.83z" clip-rule="evenodd"></path>
+      </svg>
+      <h3 class="text-xl font-medium text-gray-700 mb-2">No food items available</h3>
+      <p class="text-gray-500">Please try again later or contact support.</p>
+    </div>
+  </div>
+</div>
